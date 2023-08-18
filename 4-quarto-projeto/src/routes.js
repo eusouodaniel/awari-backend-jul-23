@@ -1,40 +1,17 @@
 import { Router } from 'express';
+import UserController from './controllers/user/user.controller.js';
+import PaymentController from './controllers/payment/payment.controller.js';
 
 const routes = Router();
 
-routes.get('/usuarios', (req, res) => {
-  console.log(req.query);
-  const response = [{
-    nome: 'Diehl',
-    sobrenome: 'Wesley',
-    curso: 'Backend',
-    instituicao: 'Awari'
-  },{
-    nome: 'Diehl',
-    sobrenome: 'Wesley',
-    curso: 'Backend',
-    instituicao: 'Awari'
-  }]
-  return res.status(200).json(response);
-});
+/* Rotas de usuário */
+routes.get('/usuarios', UserController.list);
+routes.post('/usuarios', UserController.create);
+routes.put('/usuarios/:id', UserController.update);
+routes.patch('/usuarios/:id', UserController.update);
+routes.delete('/usuarios/:id', UserController.delete);
 
-routes.post('/usuarios', (req, res) => {
-  console.log(req.body);
-  return res.status(201).json(req.body);
-});
-
-routes.put('/usuarios/:id', (req, res) => {
-  console.log(req.body);
-  return res.status(200).json(req.body);
-});
-
-routes.patch('/usuarios/:id', (req, res) => {
-  console.log(req.body);
-  return res.status(200).json(req.body);
-});
-
-routes.delete('/usuarios/:id', (req, res) => {
-  return res.status(204).json();
-});
+/* Rotas de pagamento */
+routes.post('/payment', PaymentController.payment);
 
 export default routes;
