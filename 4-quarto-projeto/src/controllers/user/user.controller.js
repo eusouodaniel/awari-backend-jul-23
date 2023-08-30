@@ -1,24 +1,48 @@
 import UserService from "../../services/user/user.service.js";
 
 class UserController {
-  create(req, res) {
-    console.log(req.body);
-    return res.status(201).json(req.body);
+  async create(req, res) {
+    try {
+      const response = await UserService.create(req.body);
+      if (response) {
+        return res.status(201).json(req.body);
+      }
+      return res.status(400).json({ message: 'Email já cadastrado' });
+    } catch (error) {
+      return res.status(500).json({ error: 'Internal server error' });
+    }
   }
 
-  list(req, res) {
-    const response = UserService.searchUsers();
-    return res.status(200).json(response);
+  async list(req, res) {
+    try {
+      const response = await UserService.searchUsers();
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(500).json({ error: 'Internal server error'});
+    }
   }
 
-  update(req, res) {
-    console.log(req.body);
-    return res.status(201).json(req.body);
+  async update(req, res) {
+    try {
+      const id = req.params.id;
+      const response = await UserService.update(req.body, id);
+      if (response) {
+        return res.status(201).json(req.body);
+      }
+      return res.status(400).json({ message: 'Email já cadastrado' });
+    } catch (error) {
+      return res.status(500).json({ error: 'Internal server error' });
+    }
   }
 
-  delete(req, res) {
-    console.log(req.params.id);
-    return res.status(204).json();
+  async delete(req, res) {
+    try {
+      const id = req.params.id;
+      await UserService.delete(id);
+      return res.status(204).json();
+    } catch (error) {
+      return res.status(500).json({ error: 'Internal server error' });
+    }
   }
 }
 

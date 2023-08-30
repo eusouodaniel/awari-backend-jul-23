@@ -4,14 +4,13 @@ class PaymentService {
   async processPayment(input) {
     const payment = this.mountPaymentBody(input);
     try {
-      const response = await axios.post(`${process.env.PAYMENT_GATEWAY_BASE_URL}/orders`, {
+      const response = await axios.post(`${process.env.PAYMENT_GATEWAY_BASE_URL}/orders`, payment, {
         headers: {
-          'Authorization': process.env.PAYMENT_GATEWAY_TOKEN,
-          'Accept': 'application/json',
+          'Authorization': `${process.env.PAYMENT_GATEWAY_TOKEN}`,
           'Content-Type': 'application/json',
         }
-      }, JSON.stringify(payment));
-      return response;
+      });
+      return response.data;
     } catch (error) {
       console.log(error.response.data);
       return false;
@@ -64,9 +63,9 @@ class PaymentService {
               security_code: body.payment.cardSecurityCode
             },
             type: 'CREDIT_CARD',
-            installments: 1,
+            installments: 3,
             capture: true,
-            soft_descriptor: `Loja teste - ${body.item.name}`
+            soft_descriptor: `Loja teste-${body.item.name}`
           },
           reference_id: `payment-${referenceId}`,
           description: `Compra de uma ${body.item.name}`
